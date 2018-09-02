@@ -36,10 +36,9 @@ difference(){
         cylinder(h = 15, r1 = 2, r2 = 2);
 
     // light holes
-    rotate([45, 0, 0])
-        //translate([-20, 0, 0])
-        translate([-20, 0, 0])
-            cube([40, 1, 40]);
+    //rotate([45, 0, 0])
+    //    translate([-20, 0, 0])
+    //        cube([40, 1, 40]);
 
     /*
     rotate([45, 0, 0])
