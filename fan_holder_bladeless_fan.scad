@@ -1,3 +1,4 @@
+//fan_type = "flat";
 fan_type = "flat";
 
 // global stuff
@@ -105,6 +106,7 @@ module cubicle(draw_legs = true){
         }
     }else{
         // 1) draw the connection cube
+        box_side = box_side + 2*box_border_width;
         block_side = fan_diameter + 2*box_border_width + game;
         block_height = fan_height + filter_height;
         
@@ -322,6 +324,65 @@ module add_logo(string = "pilillo", logo_depth= 1, strlen = 7, size=10,  pos_x, 
 }
 
 
+// did a mistake with the size of the top connection, so using the module extension to fix it (no need if you set the vars correctly)
+module extension(height = 7){
+
+    box_outside = box_side + 2*box_border_width + game;
+    echo("box_outside:"); echo(box_outside);
+    echo("box_inside:"); echo(box_side);
+    
+    // top connection
+    translate([0, 0, height/2])
+    difference(){
+        cube(size = [box_outside, box_outside, height/2], center = false);
+        translate([box_border_width+game/2, box_border_width+game/2, 0])
+            cube(size = [box_side, box_side, height/2], center = false);
+    }
+    
+    // bottom connection
+    shift = (box_outside - box_side) / 2;
+    translate([shift, shift, 0])
+    difference(){
+        translate([box_border_width, box_border_width, 0])
+        cube(size = [box_side-2*box_border_width, box_side-2*box_border_width, height/2], center = false);
+        translate([2*box_border_width, 2*box_border_width, 0])
+            cube(size = [box_side-4*box_border_width, box_side-4*box_border_width, height/2], center = false);
+    }
+    
+    bh = 2;
+    // draw the connection shape
+    translate([0, box_outside, height/2])
+    rotate([180,0,0])
+        difference(){
+                weird_cube([// bottom
+                                [0,0,0],
+                                [box_outside,0,0],
+                                [box_outside,box_outside,0],
+                                [0,box_outside,0],
+                                // top
+                                [shift, shift, bh],
+                                [box_side+shift, shift, bh],
+                                [box_side+shift, box_side+shift, bh],
+                                [shift, box_side+shift, bh]]);
+                    
+                    translate([box_border_width/2, box_border_width/2, 0])
+                        weird_cube([
+                                    // bottom
+                                    [0,0,0], 
+                                    [box_outside-box_border_width, 0,0], 
+                                    [box_outside-box_border_width, box_outside-box_border_width, 0],
+                                    [0, box_outside - box_border_width, 0],
+                                    
+                                    // top
+                                    [shift+game, shift+game, bh],
+                                    [shift+box_side-(box_border_width+game), shift+game, bh],
+                                    [shift+box_side-(box_border_width+game),shift+box_side-(box_border_width+game), bh],
+                                    [shift+game, shift+box_side-(box_border_width+game), bh]]);
+        }
+     
+}
+
+//extension();
 cubicle(draw_legs = true);
 
 //fan_support();
